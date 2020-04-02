@@ -1,5 +1,5 @@
 {
-  "name": "SoccerHistory",
+  "name": "soccerHistory",
   "version": "1.0.0",
   "description": "ㅁ Node.JS module that brings back the results of past overseas football",
   "main": "dist/index.js",
