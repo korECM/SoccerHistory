@@ -1,0 +1,29 @@
+{
+  "name": "SoccerHistory",
+  "version": "1.0.0",
+  "description": "ㅁ Node.JS module that brings back the results of past overseas football",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/korECM/SoccerHistory.git"
+  },
+  "author": "ecm",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/korECM/SoccerHistory/issues"
+  },
+  "homepage": "https://github.com/korECM/SoccerHistory/issues",
+  "dependencies": {
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
+  },
+  "devDependencies": {
+    "@types/request": "^2.48.4",
+    "@types/request-promise": "^4.1.46",
+    "jest": "^25.2.6"
+  }
+}
