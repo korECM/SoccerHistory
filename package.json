@@ -1,8 +1,9 @@
 {
-  "name": "soccerHistory",
-  "version": "1.0.0",
-  "description": "ㅁ Node.JS module that brings back the results of past overseas football",
+  "name": "soccer-history",
+  "version": "1.1.4",
+  "description": "A Node.JS module that brings back the results of past overseas football",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "jest"
@@ -16,13 +17,19 @@
   "bugs": {
     "url": "https://github.com/korECM/SoccerHistory/issues"
   },
+  "files": [
+    "dist",
+    "!*.config.js",
+    "!*.json"
+  ],
   "homepage": "https://github.com/korECM/SoccerHistory/issues",
   "dependencies": {
-    "@types/jest": "^25.1.5",
     "request": "^2.88.2",
-    "request-promise": "^4.2.5"
+    "request-promise": "^4.2.5",
+    "soccer-history": "^1.1.4"
   },
   "devDependencies": {
+    "@types/jest": "^25.1.5",
     "@types/request": "^2.48.4",
     "@types/request-promise": "^4.1.46",
     "jest": "^25.2.6",

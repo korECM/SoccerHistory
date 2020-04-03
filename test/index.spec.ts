@@ -1,4 +1,4 @@
-import SoccerHistory from "./index";
+import SoccerHistory from "../index";
 import requestPromise from "request-promise";
 let sc: SoccerHistory;
 
@@ -9,7 +9,7 @@ let testData = [
     homeTeamScore: "2",
     awayTeamScore: "0",
     gameStartDate: "2020-03-09",
-    state: "종료"
+    state: "종료",
   },
   {
     homeTeamName: "A",
@@ -17,8 +17,8 @@ let testData = [
     homeTeamScore: "2",
     awayTeamScore: "0",
     gameStartDate: "2020-03-12",
-    state: "종료"
-  }
+    state: "종료",
+  },
 ];
 let api: jest.Mock<any, any>;
 beforeEach(() => {
@@ -34,9 +34,9 @@ describe("SoccerHistory 클래스는", () => {
         ["epl"],
         ["epl", null],
         ["epl", undefined],
-        ["epls", new Date()]
+        ["epls", new Date()],
       ];
-      errorArrayData.map(async wrongData => {
+      errorArrayData.map(async (wrongData) => {
         await expect(
           sc.getHistory(wrongData[0] as any, wrongData[1] as any)
         ).rejects.toBeTruthy();
@@ -56,7 +56,7 @@ describe("SoccerHistory 클래스는", () => {
           homeTeamScore: "2",
           awayTeamScore: "0",
           gameDate: "2020-03-09",
-          state: "종료"
+          state: "종료",
         },
         {
           homeTeamName: "A",
@@ -64,8 +64,8 @@ describe("SoccerHistory 클래스는", () => {
           homeTeamScore: "2",
           awayTeamScore: "0",
           gameDate: "2020-03-12",
-          state: "종료"
-        }
+          state: "종료",
+        },
       ];
       await expect(sc.getHistory("epl", new Date())).resolves.toEqual(
         resultData

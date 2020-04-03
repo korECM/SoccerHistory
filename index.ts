@@ -3,14 +3,14 @@ import { League, LeagueArray, SoccerInformation } from "./Models";
 import request from "request-promise";
 
 class SoccerHistory {
-  constructor(api: any) {
+  constructor(api: any = null) {
     if (api) this.callAPI = api;
   }
   public async getHistory(leagueType: League, date: Date) {
     try {
       if (!leagueType || !LeagueArray.includes(leagueType))
         throw new Error("리그 타입이 적절하지 않습니다");
-      if(!date) throw new Error("특정 날짜를 Date 객체로 전달해야 합니다")
+      if (!date) throw new Error("특정 날짜를 Date 객체로 전달해야 합니다");
       if (!this.checkYearValid(date))
         throw new Error("2010년 이전 정보는 조회할 수 없습니다");
       let inDate: string = this.getDateStringFromDate(date);
@@ -23,10 +23,11 @@ class SoccerHistory {
 
   private getDateStringFromDate(date: Date): string {
     if (date instanceof Date) {
-      let dateString = date
-        .toISOString()
-        .slice(0, 10)
-        .replace(/-/g, "");
+      let dateString = `${date.getFullYear()}${
+        date.getMonth() + 1 < 10
+          ? `0${date.getMonth() + 1}`
+          : date.getMonth() + 1
+      }${date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()}`;
       if (checkDate(dateString)) {
         return dateString;
       }
@@ -50,7 +51,7 @@ class SoccerHistory {
         homeTeamScore: data.homeTeamScore,
         awayTeamScore: data.awayTeamScore,
         gameDate: data.gameStartDate,
-        state: data.state
+        state: data.state,
       });
     });
     return soccerData;
@@ -63,8 +64,8 @@ class SoccerHistory {
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
         "User-Agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36"
-      }
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36",
+      },
     };
     try {
       let data: object[] | null = null;
@@ -76,28 +77,6 @@ class SoccerHistory {
       throw error;
     }
   }
-
-  // private mergeDate(
-  //   year: string | number,
-  //   month: string | number,
-  //   day: string | number
-  // ): string {
-  //   let inYear: number, inMonth: number, inDay: number;
-  //   inYear = this.stringToNumber(year);
-  //   inMonth = this.stringToNumber(month);
-  //   inDay = this.stringToNumber(day);
-
-  //   return new Date(inYear, inMonth - 1, inDay)
-  //     .toISOString()
-  //     .slice(0, 10)
-  //     .replace(/-/g, "");
-  // }
-  // private stringToNumber(input: string | number) {
-  //   if (typeof input === "string") return parseInt(input);
-  //   return input;
-  // }
 }
-
-// new SoccerHistory().getHistory("epl", "20200309");
 
 export default SoccerHistory;
