@@ -3,5 +3,4 @@ const checkDate = (date: string) => {
   if (dayRegExp.test(date)) return true;
   return false;
 };
-
 export { checkDate };

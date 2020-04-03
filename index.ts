@@ -1,38 +1,65 @@
 import { checkDate } from "./Utils";
-import { League, SoccerInformation } from "./Models";
+import { League, LeagueArray, SoccerInformation } from "./Models";
 import request from "request-promise";
 
 class SoccerHistory {
-  constructor() {}
-  public async getHistory(
-    leagueType: League,
-    date: string | number,
-    month?: string | number,
-    day?: string | number
-  ) {
-    let league: League = leagueType;
-    let inDate: string;
+  constructor(api: any) {
+    if (api) this.callAPI = api;
+  }
+  public async getHistory(leagueType: League, date: Date) {
+    try {
+      if (!leagueType || !LeagueArray.includes(leagueType))
+        throw new Error("리그 타입이 적절하지 않습니다");
+      if(!date) throw new Error("특정 날짜를 Date 객체로 전달해야 합니다")
+      if (!this.checkYearValid(date))
+        throw new Error("2010년 이전 정보는 조회할 수 없습니다");
+      let inDate: string = this.getDateStringFromDate(date);
+      let rawData: any[] = await this.callAPI(leagueType, inDate);
+      return this.parseData(rawData);
+    } catch (error) {
+      throw error;
+    }
+  }
 
-    if (date && month && day) {
-      inDate = this.mergeDate(date, month, day);
-    } else if (typeof date === "string") {
-      if (checkDate(date)) {
-        inDate = date;
-        if (parseInt(inDate.substr(0, 4)) < 2010) {
-          throw new Error("2010년 이전 정보는 조회할 수 없습니다");
-        }
-      } else {
-        throw new Error("유효하지 않은 날짜 형식");
+  private getDateStringFromDate(date: Date): string {
+    if (date instanceof Date) {
+      let dateString = date
+        .toISOString()
+        .slice(0, 10)
+        .replace(/-/g, "");
+      if (checkDate(dateString)) {
+        return dateString;
       }
     }
-    await this.callAPI(league, inDate!);
+    throw new Error("유효하지 않은 날짜 형식");
+  }
+
+  private checkYearValid(date: Date) {
+    if (date.getFullYear() < 2010) {
+      return false;
+    }
+    return true;
+  }
+
+  private parseData(rawData: any[]) {
+    let soccerData: SoccerInformation[] = [];
+    rawData.map((data: any) => {
+      soccerData.push({
+        homeTeamName: data.homeTeamName,
+        awayTeamName: data.awayTeamName,
+        homeTeamScore: data.homeTeamScore,
+        awayTeamScore: data.awayTeamScore,
+        gameDate: data.gameStartDate,
+        state: data.state
+      });
+    });
+    return soccerData;
   }
 
   private async callAPI(league: League, date: string) {
-    let url = `https://sports.news.naver.com/wfootball/schedule/scoreboard.nhn?date=${date}&year=2015&month=02&category=${league}`;
     let options = {
       method: "GET",
-      url: url,
+      url: `https://sports.news.naver.com/wfootball/schedule/scoreboard.nhn?date=${date}&year=2015&month=02&category=${league}`,
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
         "User-Agent":
@@ -40,49 +67,37 @@ class SoccerHistory {
       }
     };
     try {
-      await request(options, (err, response) => {
-        let rawData: any[] = JSON.parse(response.body).scoreboardList;
-        let soccerData: SoccerInformation[] = [];
-        rawData.map(data => {
-          soccerData.push({
-            homeTeamName: data.homeTeamName,
-            awayTeamName: data.awayTeamName,
-            homeTeamScore: data.homeTeamScore,
-            awayTeamScore: data.awayTeamScore,
-            gameDate: data.gameStartDate,
-            state: data.state
-          });
-        });
-        console.log(soccerData);
+      let data: object[] | null = null;
+      await request(options, (err: any, response: any) => {
+        data = JSON.parse(response.body).scoreboardList;
       });
+      return data || [];
     } catch (error) {
-      console.error(error);
+      throw error;
     }
   }
 
-  private mergeDate(
-    year: string | number,
-    month: string | number,
-    day: string | number
-  ): string {
-    let inYear: number, inMonth: number, inDay: number;
-    if (typeof year === "string") inYear = parseInt(year);
-    else inYear = year;
-    if (inYear < 2010) {
-      throw new Error("2010년 이전 정보는 조회할 수 없습니다");
-    }
-    if (typeof month === "string") inMonth = parseInt(month);
-    else inMonth = month;
-    if (typeof day === "string") inDay = parseInt(day);
-    else inDay = day;
-    return new Date(inYear, inMonth - 1, inDay)
-      .toISOString()
-      .slice(0, 10)
-      .replace(/-/g, "");
-  }
+  // private mergeDate(
+  //   year: string | number,
+  //   month: string | number,
+  //   day: string | number
+  // ): string {
+  //   let inYear: number, inMonth: number, inDay: number;
+  //   inYear = this.stringToNumber(year);
+  //   inMonth = this.stringToNumber(month);
+  //   inDay = this.stringToNumber(day);
+
+  //   return new Date(inYear, inMonth - 1, inDay)
+  //     .toISOString()
+  //     .slice(0, 10)
+  //     .replace(/-/g, "");
+  // }
+  // private stringToNumber(input: string | number) {
+  //   if (typeof input === "string") return parseInt(input);
+  //   return input;
+  // }
 }
 
-let test = new SoccerHistory();
-test.getHistory("epl", "20200502");
+// new SoccerHistory().getHistory("epl", "20200309");
 
 export default SoccerHistory;
