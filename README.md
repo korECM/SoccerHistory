@@ -1,9 +1,11 @@
 # SoccerHistory
 > 해외 축구 경기 결과를 불러와주는 라이브러리입니다.
 
-[![NPM Version][npm-image]][npm-url]
-[![Build Status][travis-image]][travis-url]
-[![Downloads Stats][npm-downloads]][npm-url]
+[![npm version](https://badge.fury.io/js/soccer-history.svg)](https://badge.fury.io/js/soccer-history)
+[![Build Status](https://travis-ci.com/korECM/SoccerHistory.svg?branch=master)](https://travis-ci.com/korECM/SoccerHistory)
+[![GitHub license](https://img.shields.io/github/license/korECM/SoccerHistory)](https://github.com/korECM/SoccerHistory/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/korECM/SoccerHistory)](https://github.com/korECM/SoccerHistory/stargazers)
+[![HitCount](http://hits.dwyl.com/korECM/SoccerHistory.svg)](http://hits.dwyl.com/korECM/SoccerHistory)
 
 여러 해외 축구 리그 경기 결과를 조회할 수 있는 라이브러리입니다!
 지원하는 리그는 다음과 같습니다.
